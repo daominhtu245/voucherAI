@@ -42,8 +42,7 @@ export async function POST(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    // Lưu server-side để claim từ bất kỳ trình duyệt nào
-    saveVoucher(voucher);
+    await saveVoucher(voucher);
 
     return NextResponse.json({
       voucher,
@@ -58,5 +57,6 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("userId");
   if (!userId) return NextResponse.json({ vouchers: [] });
-  return NextResponse.json({ vouchers: getUserVouchers(userId) });
+  const vouchers = await getUserVouchers(userId);
+  return NextResponse.json({ vouchers });
 }
